@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Static Code Analyzer</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- TOP BAR -->
+    <div class="top-nav">
+        <div class="nav-left">
+            <div class="logo-area">
+                <div class="app-icon"><span>{ }</span></div>
+                <span class="app-name">Static Code Analyzer</span>
+            </div>
+        </div>
+
+        <div class="nav-right">
+            <!-- Button connected to form -->
+            <button type="submit" form="codeForm" class="analyze-btn">⚡ Analyze Code</button>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-workarea">
+
+        <!-- SIDEBAR -->
+        <div class="left-sidebar">
+            <div class="sidebar-icon active">📄</div>
+            <div class="sidebar-icon">🔍</div>
+            <div class="sidebar-icon">⚙️</div>
+        </div>
+
+        <!-- EDITOR -->
+        <div class="editor-container">
+
+            <!-- ✅ FORM placed correctly -->
+            <form method="POST" id="codeForm">
+
+                <div class="code-editor">
+                    <div class="line-numbers" id="lineNumbers">1</div>
+
+                    <textarea 
+                        name="code"
+                        class="code-content"
+                        id="codeInput"
+                        placeholder="Write your code here..."
+                        oninput="updateLineNumbers()"
+                        onscroll="syncScroll()"
+                    >{{ code }}</textarea>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- BOTTOM PANEL -->
+    <div class="bottom-panel">
+
+        <!-- TOKENS -->
+        <div class="tokens-section">
+            <div class="section-header">
+                <h3>Tokens</h3>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for token in tokens %}
+                        <tr>
+                            <td>{{ token[0] }}</td>
+                            <td>{{ token[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ERRORS -->
+        <div class="errors-section">
+            <div class="error-tabs">
+                <div class="error-tab active">Syntax Errors</div>
+                <div class="error-tab">Semantic Errors</div>
+            </div>
+
+            <div class="error-list">
+
+                {% for error in syntax_errors %}
+                <div class="error-item">
+                    <span class="error-icon">✖</span>
+                    <span class="error-desc">{{ error }}</span>
+                </div>
+                {% endfor %}
+
+                {% for error in semantic_errors %}
+                <div class="error-item">
+                    <span class="error-icon">⚠</span>
+                    <span class="error-desc">{{ error }}</span>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- JS for line numbers -->
+<script>
+function updateLineNumbers() {
+    const textarea = document.getElementById('codeInput');
+    const lineNumbers = document.getElementById('lineNumbers');
+    const lines = textarea.value.split('\n').length;
+
+    let numbers = '';
+    for (let i = 1; i <= lines; i++) {
+        numbers += i + '<br>';
+    }
+    lineNumbers.innerHTML = numbers;
+}
+
+function syncScroll() {
+    const textarea = document.getElementById('codeInput');
+    const lineNumbers = document.getElementById('lineNumbers');
+    lineNumbers.scrollTop = textarea.scrollTop;
+}
+
+window.onload = function() {
+    updateLineNumbers();
+};
+</script>
+
+</body>
+</html>
