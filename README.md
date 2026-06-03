@@ -173,6 +173,8 @@ No Semantic Errors Found
 ## Contributors
 
 * Priyanshu Dangi
+* Akansha Joshi
+* Deepak Kumar Kabi
 
 ---
 
